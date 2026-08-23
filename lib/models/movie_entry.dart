@@ -58,14 +58,17 @@ class MovieEntry {
   String? get effectivePosterPath => customPosterPath ?? posterPath;
 
   /// ISO week grouping key, e.g. "2026-W18", used to bucket entries into
-  /// the "WEEK 18" sections seen in the Diary screen.
+  /// the "WEEK 18" sections seen in the Diary screen. Zero-padded to 2
+  /// digits so string sorting ("2026-W02" < "2026-W18") matches
+  /// chronological order — an unpadded "W9" vs "W18" would otherwise
+  /// sort W9 after W18 since '9' > '1' character-by-character.
   String get weekKey {
     final date = watchedAt;
     final thursday = date.add(Duration(days: 3 - ((date.weekday + 6) % 7)));
     final firstDayOfYear = DateTime(thursday.year, 1, 1);
     final weekNumber =
         ((thursday.difference(firstDayOfYear).inDays) / 7).floor() + 1;
-    return '${thursday.year}-W$weekNumber';
+    return '${thursday.year}-W${weekNumber.toString().padLeft(2, '0')}';
   }
 
   MovieEntry copyWith({

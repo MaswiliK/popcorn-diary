@@ -198,6 +198,7 @@ class _AddMovieScreenState extends ConsumerState<AddMovieScreen> {
       }
       ref.invalidate(movieEntriesProvider);
       ref.invalidate(entriesByWeekProvider);
+      ref.invalidate(diarySearchResultsProvider);
 
       if (mounted) Navigator.of(context).pop();
     } catch (e) {
