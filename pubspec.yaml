@@ -1,0 +1,45 @@
+name: popcorn_diary
+description: "Your movies. Your memories. A personal visual cinema diary."
+publish_to: 'none'
+version: 0.1.0+1
+
+environment:
+  sdk: '>=3.3.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.6
+
+  # State management
+  flutter_riverpod: ^2.5.1
+
+  # Local persistence (local-first architecture)
+  sqflite: ^2.3.3+1
+  path: ^1.9.0
+  path_provider: ^2.1.3
+
+  # Navigation
+  go_router: ^14.2.0
+
+  # TMDB / networking (Phase 2)
+  http: ^1.2.1
+
+  # Images — posters are the primary visual object
+  cached_network_image: ^3.3.1
+
+  # Dates
+  intl: ^0.19.0
+
+  # Ratings input (half-star rating widget, e.g. 8.5/10 shown as stars)
+  flutter_rating_bar: ^4.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/

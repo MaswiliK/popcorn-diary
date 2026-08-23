@@ -1,0 +1,115 @@
+# ==========================
+# Flutter/Dart
+# ==========================
+
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub/
+.pub-cache/
+build/
+
+# ==========================
+# IDE
+# ==========================
+
+.idea/
+.vscode/
+
+*.iml
+
+# ==========================
+# Android
+# ==========================
+
+**/android/.gradle/
+**/android/captures/
+**/android/local.properties
+
+# Keystore files
+*.jks
+*.keystore
+key.properties
+
+# APKs & App Bundles
+*.apk
+*.aab
+
+# ==========================
+# iOS
+# ==========================
+
+**/ios/Pods/
+**/ios/.symlinks/
+**/ios/Flutter/Flutter.framework
+**/ios/Flutter/Flutter.podspec
+
+# ==========================
+# macOS
+# ==========================
+
+**/macos/Flutter/ephemeral/
+
+# ==========================
+# Linux
+# ==========================
+
+**/linux/flutter/ephemeral/
+
+# ==========================
+# Windows
+# ==========================
+
+**/windows/flutter/ephemeral/
+
+# ==========================
+# Fuchsia
+# ==========================
+
+**/fuchsia/.packages
+**/fuchsia/flutter/
+
+# ==========================
+# Web
+# ==========================
+
+lib/generated_plugin_registrant.dart
+
+# ==========================
+# Logs
+# ==========================
+
+*.log
+
+# ==========================
+# Environment
+# ==========================
+
+.env
+.env.*
+!.env.example
+
+# ==========================
+# OS Files
+# ==========================
+
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ==========================
+# Coverage
+# ==========================
+
+coverage/
+
+# ==========================
+# Misc
+# ==========================
+
+.metadata
+
+gameplan.md
+README.md
+summary.md
