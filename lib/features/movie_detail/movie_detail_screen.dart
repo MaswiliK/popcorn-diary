@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
 import '../../core/providers.dart';
@@ -19,7 +20,25 @@ class MovieDetailScreen extends ConsumerWidget {
     final entryAsync = ref.watch(movieEntryProvider(entryId));
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        actions: [
+          entryAsync.maybeWhen(
+            data: (entry) => entry == null
+                ? const SizedBox.shrink()
+                : IconButton(
+                    icon: const Icon(Icons.edit_outlined),
+                    tooltip: 'Edit',
+                    onPressed: () async {
+                      await context.push('/edit-movie', extra: entry);
+                      // The edit screen invalidates the providers itself;
+                      // this just makes sure this screen reflects it too.
+                      ref.invalidate(movieEntryProvider(entryId));
+                    },
+                  ),
+            orElse: () => const SizedBox.shrink(),
+          ),
+        ],
+      ),
       body: entryAsync.when(
         data: (entry) {
           if (entry == null) {
@@ -81,9 +100,11 @@ class _DetailBody extends StatelessWidget {
             Wrap(
               spacing: 12,
               children: [
-                if (entry.releaseDate != null) Text('${entry.releaseDate!.year}'),
+                if (entry.releaseDate != null)
+                  Text('${entry.releaseDate!.year}'),
                 if (entry.runtimeMinutes != null)
-                  Text('${entry.runtimeMinutes! ~/ 60}h ${entry.runtimeMinutes! % 60}m'),
+                  Text(
+                      '${entry.runtimeMinutes! ~/ 60}h ${entry.runtimeMinutes! % 60}m'),
                 if (entry.genres.isNotEmpty) Text(entry.genres.join(' · ')),
               ],
             ),
@@ -91,13 +112,15 @@ class _DetailBody extends StatelessWidget {
             const SizedBox(height: 16),
             Text('Director', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 4),
-            Text(entry.director!, style: const TextStyle(color: AppColors.textSecondary)),
+            Text(entry.director!,
+                style: const TextStyle(color: AppColors.textSecondary)),
           ],
           if (entry.overview != null && entry.overview!.isNotEmpty) ...[
             const SizedBox(height: 16),
             Text('Overview', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 4),
-            Text(entry.overview!, style: const TextStyle(color: AppColors.textSecondary)),
+            Text(entry.overview!,
+                style: const TextStyle(color: AppColors.textSecondary)),
           ],
           const SizedBox(height: 32),
         ],

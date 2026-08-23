@@ -5,6 +5,7 @@ import '../features/diary/diary_screen.dart';
 import '../features/discover/discover_screen.dart';
 import '../features/movie_detail/add_movie_screen.dart';
 import '../features/movie_detail/movie_detail_screen.dart';
+import '../models/movie_entry.dart';
 import 'app_shell.dart';
 import 'more_screen.dart';
 
@@ -52,6 +53,11 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/add-movie',
       builder: (context, state) => const AddMovieScreen(),
+    ),
+    GoRoute(
+      path: '/edit-movie',
+      builder: (context, state) =>
+          AddMovieScreen(existingEntry: state.extra as MovieEntry),
     ),
   ],
 );
