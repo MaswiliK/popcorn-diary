@@ -11,9 +11,10 @@ class DatabaseHelper {
   static final DatabaseHelper instance = DatabaseHelper._internal();
 
   static const _dbName = 'popcorn_diary.db';
-  static const _dbVersion = 1;
+  static const _dbVersion = 2;
 
   static const tableMovieEntries = 'movie_entries';
+  static const tableTmdbCache = 'tmdb_metadata_cache';
 
   Database? _db;
 
@@ -29,10 +30,25 @@ class DatabaseHelper {
       path,
       version: _dbVersion,
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
   }
 
   Future<void> _onCreate(Database db, int version) async {
+    await _createMovieEntriesTable(db);
+    await _createTmdbCacheTable(db);
+  }
+
+  /// Runs when an existing (already-installed) database is older than
+  /// [_dbVersion]. Each `if` is additive and independent so a user
+  /// upgrading across multiple versions at once picks up every step.
+  Future<void> _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await _createTmdbCacheTable(db);
+    }
+  }
+
+  Future<void> _createMovieEntriesTable(Database db) async {
     await db.execute('''
       CREATE TABLE $tableMovieEntries (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -62,6 +78,20 @@ class DatabaseHelper {
     await db.execute(
       'CREATE INDEX idx_movie_entries_tmdb_id ON $tableMovieEntries (tmdb_id)',
     );
+  }
+
+  /// Persistent cache of TMDB `getDetails()` responses, keyed by TMDB's
+  /// own movie id. Added in schema v2 — see CachedMovieMetadataProvider,
+  /// which reads/writes this table so metadata survives app restarts
+  /// instead of refetching every cold start (Phase 2 polish item).
+  Future<void> _createTmdbCacheTable(Database db) async {
+    await db.execute('''
+      CREATE TABLE IF NOT EXISTS $tableTmdbCache (
+        tmdb_id INTEGER PRIMARY KEY,
+        payload TEXT NOT NULL,
+        cached_at TEXT NOT NULL
+      )
+    ''');
   }
 
   Future<void> close() async {

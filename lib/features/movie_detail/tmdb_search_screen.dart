@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/config.dart';
 import '../../core/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../services/movie_metadata_provider.dart';
-import '../../services/tmdb_provider.dart';
 import '../../widgets/poster_thumbnail.dart';
 
 /// Search TMDB and return the chosen [MovieSearchResult] to the caller via
@@ -30,8 +30,7 @@ class _TmdbSearchScreenState extends ConsumerState<TmdbSearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final hasToken = ref.read(movieMetadataProvider) is TMDBProvider &&
-        (ref.read(movieMetadataProvider) as TMDBProvider).apiReadAccessToken.isNotEmpty;
+    final hasToken = AppConfig.hasTmdbToken;
 
     return Scaffold(
       appBar: AppBar(
@@ -74,7 +73,8 @@ class _ResultsList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     if (query.trim().length < 2) {
       return const Center(
-        child: Text('Keep typing to search…', style: TextStyle(color: AppColors.textTertiary)),
+        child: Text('Keep typing to search…',
+            style: TextStyle(color: AppColors.textTertiary)),
       );
     }
 
@@ -84,7 +84,8 @@ class _ResultsList extends ConsumerWidget {
       data: (results) {
         if (results.isEmpty) {
           return const Center(
-            child: Text('No matches found.', style: TextStyle(color: AppColors.textSecondary)),
+            child: Text('No matches found.',
+                style: TextStyle(color: AppColors.textSecondary)),
           );
         }
         final provider = ref.read(movieMetadataProvider);
@@ -96,12 +97,16 @@ class _ResultsList extends ConsumerWidget {
             return ListTile(
               contentPadding: EdgeInsets.zero,
               leading: PosterThumbnail(
-                imageUrl: r.posterPath == null ? null : provider.imageUrl(r.posterPath!, size: 'w185'),
+                imageUrl: r.posterPath == null
+                    ? null
+                    : provider.imageUrl(r.posterPath!, size: 'w185'),
                 width: 44,
                 height: 64,
               ),
               title: Text(r.title),
-              subtitle: r.releaseDate != null ? Text(DateFormat('yyyy').format(r.releaseDate!)) : null,
+              subtitle: r.releaseDate != null
+                  ? Text(DateFormat('yyyy').format(r.releaseDate!))
+                  : null,
               onTap: () => Navigator.of(context).pop(r),
             );
           },
@@ -134,9 +139,11 @@ class _NoTokenNotice extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const Icon(Icons.key_off_outlined, size: 40, color: AppColors.textTertiary),
+              const Icon(Icons.key_off_outlined,
+                  size: 40, color: AppColors.textTertiary),
               const SizedBox(height: 12),
-              Text('TMDB search is not configured', style: Theme.of(context).textTheme.titleLarge),
+              Text('TMDB search is not configured',
+                  style: Theme.of(context).textTheme.titleLarge),
               const SizedBox(height: 8),
               const Text(
                 'Run the app with a TMDB API token:\n'

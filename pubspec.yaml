@@ -1,7 +1,7 @@
 name: popcorn_diary
 description: "Your movies. Your memories. A personal visual cinema diary."
 publish_to: 'none'
-version: 0.1.0+1
+version: 0.1.0
 
 environment:
   sdk: '>=3.3.0 <4.0.0'
@@ -33,6 +33,9 @@ dependencies:
 
   # Ratings input (half-star rating widget, e.g. 8.5/10 shown as stars)
   flutter_rating_bar: ^4.0.1
+
+  # App version info
+  package_info_plus: ^8.0.0
 
 dev_dependencies:
   flutter_test:
