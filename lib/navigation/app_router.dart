@@ -5,13 +5,18 @@ import '../features/diary/diary_screen.dart';
 import '../features/discover/discover_screen.dart';
 import '../features/movie_detail/add_movie_screen.dart';
 import '../features/movie_detail/movie_detail_screen.dart';
+import '../features/splash/splash_screen.dart';
 import '../models/movie_entry.dart';
 import 'app_shell.dart';
 import 'more_screen.dart';
 
 final GoRouter appRouter = GoRouter(
-  initialLocation: '/diary',
+  initialLocation: '/splash',
   routes: [
+    GoRoute(
+      path: '/splash',
+      builder: (context, state) => const SplashScreen(),
+    ),
     StatefulShellRoute.indexedStack(
       builder: (context, state, navigationShell) =>
           AppShell(navigationShell: navigationShell),

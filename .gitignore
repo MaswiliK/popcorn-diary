@@ -112,3 +112,7 @@ coverage/
 
 gameplan.md
 summary.md
+
+# Local secrets
+config/*.json
+!config/tmdb.example.json
