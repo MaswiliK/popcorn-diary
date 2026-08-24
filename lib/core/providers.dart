@@ -95,6 +95,19 @@ final diarySearchResultsProvider =
   return repo.searchEntries(query);
 });
 
+/// Whether Diary/search results render as poster rows or a poster grid.
+enum DiaryViewMode { list, grid }
+
+/// Current view mode for the Diary screen (list rows vs. poster grid).
+final diaryViewModeProvider =
+    StateProvider.autoDispose<DiaryViewMode>((ref) => DiaryViewMode.list);
+
+/// Week keys the user has manually collapsed. A week not in this set is
+/// expanded — i.e. everything starts expanded, matching the pre-fold
+/// behavior, and folding is purely an opt-in decluttering action.
+final collapsedWeeksProvider =
+    StateProvider.autoDispose<Set<String>>((ref) => <String>{});
+
 /// Total number of diary entries — used on the Settings screen.
 final movieEntryCountProvider = FutureProvider.autoDispose<int>((ref) async {
   final repo = ref.watch(movieRepositoryProvider);

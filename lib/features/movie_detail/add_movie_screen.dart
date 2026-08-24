@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 
+import '../../core/network_error.dart';
 import '../../core/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../models/movie_entry.dart';
@@ -99,7 +100,7 @@ class _AddMovieScreenState extends ConsumerState<AddMovieScreen> {
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Could not fetch details: $e')),
+          SnackBar(content: Text(friendlyMetadataErrorMessage(e))),
         );
       }
     } finally {
@@ -237,9 +238,25 @@ class _AddMovieScreenState extends ConsumerState<AddMovieScreen> {
     );
 
     if (confirmed == true && mounted) {
-      await ref.read(movieRepositoryProvider).deleteEntry(entry!.id!);
+      final movieRepo = ref.read(movieRepositoryProvider);
+      await movieRepo.deleteEntry(entry!.id!);
+
+      // Evict this movie's cached TMDB metadata too, but only once no
+      // other diary entry still references it (a rewatch means multiple
+      // entries share one tmdbId — the cache should survive until the
+      // last of those is gone).
+      final tmdbId = entry.tmdbId;
+      if (tmdbId != null) {
+        final remaining = await movieRepo.countEntriesWithTmdbId(tmdbId);
+        if (remaining == 0) {
+          await ref.read(metadataCacheRepositoryProvider).deleteOne(tmdbId);
+          ref.invalidate(metadataCacheCountProvider);
+        }
+      }
+
       ref.invalidate(movieEntriesProvider);
       ref.invalidate(entriesByWeekProvider);
+      ref.invalidate(diarySearchResultsProvider);
       if (mounted) {
         Navigator.of(context).pop(); // close the edit screen
         // If we were pushed on top of the detail screen, pop once more

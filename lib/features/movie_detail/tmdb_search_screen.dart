@@ -7,6 +7,7 @@ import '../../core/providers.dart';
 import '../../core/theme/app_colors.dart';
 import '../../services/movie_metadata_provider.dart';
 import '../../widgets/poster_thumbnail.dart';
+import '../../core/network_error.dart';
 
 /// Search TMDB and return the chosen [MovieSearchResult] to the caller via
 /// `Navigator.pop(result)`. The Add Movie screen uses this to autofill its
@@ -116,10 +117,18 @@ class _ResultsList extends ConsumerWidget {
       error: (err, stack) => Center(
         child: Padding(
           padding: const EdgeInsets.all(16),
-          child: Text(
-            'Search failed. Check your connection and TMDB token.\n$err',
-            textAlign: TextAlign.center,
-            style: const TextStyle(color: AppColors.textSecondary),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(Icons.wifi_off_outlined,
+                  size: 36, color: AppColors.textTertiary),
+              const SizedBox(height: 10),
+              Text(
+                friendlyMetadataErrorMessage(err),
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: AppColors.textSecondary),
+              ),
+            ],
           ),
         ),
       ),

@@ -78,8 +78,21 @@ class MovieRepository {
 
   Future<int> countEntries() async {
     final db = await _databaseHelper.database;
-    final result =
-        await db.rawQuery('SELECT COUNT(*) AS c FROM ${DatabaseHelper.tableMovieEntries}');
+    final result = await db.rawQuery(
+        'SELECT COUNT(*) AS c FROM ${DatabaseHelper.tableMovieEntries}');
+    return Sqflite.firstIntValue(result) ?? 0;
+  }
+
+  /// How many diary entries still reference a given TMDB movie id. Used
+  /// before evicting that movie's cached metadata on delete — a rewatch
+  /// (same movie, multiple entries) should keep the cache until the
+  /// *last* referencing entry is gone, not the first.
+  Future<int> countEntriesWithTmdbId(int tmdbId) async {
+    final db = await _databaseHelper.database;
+    final result = await db.rawQuery(
+      'SELECT COUNT(*) AS c FROM ${DatabaseHelper.tableMovieEntries} WHERE tmdb_id = ?',
+      [tmdbId],
+    );
     return Sqflite.firstIntValue(result) ?? 0;
   }
 }

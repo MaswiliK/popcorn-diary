@@ -71,6 +71,18 @@ class MetadataCacheRepository {
     await db.delete(DatabaseHelper.tableTmdbCache);
   }
 
+  /// Evicts a single cached entry — used when the last diary entry
+  /// referencing this TMDB movie is deleted (see
+  /// [MovieRepository.countEntriesWithTmdbId]).
+  Future<void> deleteOne(int externalId) async {
+    final db = await _databaseHelper.database;
+    await db.delete(
+      DatabaseHelper.tableTmdbCache,
+      where: 'tmdb_id = ?',
+      whereArgs: [externalId],
+    );
+  }
+
   Map<String, dynamic> _toJson(MovieMetadata m) => {
         'externalId': m.externalId,
         'title': m.title,
