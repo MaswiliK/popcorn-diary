@@ -50,3 +50,47 @@ The generated APK can be found under:
 ```text
 build/app/outputs/flutter-apk/app-release.apk
 ```
+
+## 📂 Project Structure
+### File Tree: lib
+
+```text
+├── core
+│   ├── database
+│   │   └── database_helper.dart
+│   ├── theme
+│   │   ├── app_colors.dart
+│   │   └── app_theme.dart
+│   ├── config.dart
+│   ├── network_error.dart
+│   └── providers.dart
+├── features
+│   ├── cinema
+│   │   └── your_cinema_screen.dart
+│   ├── diary
+│   │   └── diary_screen.dart
+│   ├── discover
+│   │   └── discover_screen.dart
+│   ├── movie_detail
+│   │   ├── add_movie_screen.dart
+│   │   ├── movie_detail_screen.dart
+│   │   └── tmdb_search_screen.dart
+│   └── splash
+│       └── splash_screen.dart
+├── models
+│   └── movie_entry.dart
+├── navigation
+│   ├── app_router.dart
+│   ├── app_shell.dart
+│   └── more_screen.dart
+├── repositories
+│   ├── metadata_cache_repository.dart
+│   └── movie_repository.dart
+├── services
+│   ├── cached_metadata_provider.dart
+│   ├── movie_metadata_provider.dart
+│   └── tmdb_provider.dart
+├── widgets
+│   └── poster_thumbnail.dart
+└── main.dart
+```
